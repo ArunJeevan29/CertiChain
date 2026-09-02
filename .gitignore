@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Python Virtual Environments
+venv/
+env/
+__pycache__/
+
+# Environment variables
+.env
+
+# Build outputs
+dist/
+build/
+
+# Uploads & Generated Files
+backend/uploads/
+backend/generated-certificates/
+
+# Generated certificate/document files
+*.pdf
+*.csv
+*.xlsx
+
+# Hardhat
+artifacts/
+cache/
+typechain/
+typechain-types/
