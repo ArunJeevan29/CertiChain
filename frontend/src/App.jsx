@@ -9,6 +9,9 @@ import Unauthorized from './pages/Unauthorized';
 import AdminDashboard from './pages/AdminDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 import StudentDashboard from './pages/StudentDashboard';
+import Students from './pages/Students';
+import StudentDetails from './pages/StudentDetails';
+import EditStudent from './pages/EditStudent';
 
 function App() {
   return (
@@ -45,6 +48,33 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['STUDENT']}>
                 <StudentDashboard />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/students" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <Students />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/student/:id" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <StudentDetails />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/student/:id/edit" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <EditStudent />
               </ProtectedRoute>
             } 
           />

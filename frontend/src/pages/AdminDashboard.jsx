@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const AdminDashboard = () => {
@@ -12,7 +13,10 @@ const AdminDashboard = () => {
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
+              <Link to="/students" className="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                Manage Students
+              </Link>
               <span className="text-sm text-gray-700">Welcome, {user?.name} ({user?.role})</span>
               <button
                 onClick={logout}

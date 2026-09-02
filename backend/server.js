@@ -21,9 +21,11 @@ app.get('/api/health', (req, res) => {
 
 import authRoutes from './routes/authRoutes.js';
 import testRoutes from './routes/testRoutes.js';
+import studentRoutes from './routes/studentRoutes.js';
 
 // Apply error handling middleware
 app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
 app.use('/api', testRoutes);
 
 app.use(notFound);
