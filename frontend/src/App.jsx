@@ -12,6 +12,9 @@ import StudentDashboard from './pages/StudentDashboard';
 import Students from './pages/Students';
 import StudentDetails from './pages/StudentDetails';
 import EditStudent from './pages/EditStudent';
+import Certificates from './pages/Certificates';
+import CreateCertificate from './pages/CreateCertificate';
+import CertificateDetails from './pages/CertificateDetails';
 
 function App() {
   return (
@@ -75,6 +78,33 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                 <EditStudent />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/certificates" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <Certificates />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/certificate/create" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <CreateCertificate />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/certificate/:id" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF', 'STUDENT']}>
+                <CertificateDetails />
               </ProtectedRoute>
             } 
           />

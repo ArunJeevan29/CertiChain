@@ -17,6 +17,9 @@ const StaffDashboard = () => {
               <Link to="/students" className="text-sm font-medium text-indigo-600 hover:text-indigo-900">
                 Manage Students
               </Link>
+              <Link to="/certificates" className="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                Manage Certificates
+              </Link>
               <span className="text-sm text-gray-700">Welcome, {user?.name} ({user?.role})</span>
               <button
                 onClick={logout}

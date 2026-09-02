@@ -96,3 +96,31 @@ export const validateStudentUpdate = (req, res, next) => {
 
   next();
 };
+
+export const validateCreateCertificate = (req, res, next) => {
+  const { studentId, certificateTitle, courseName, issuerName, issuerOrganization, issueDate } = req.body;
+
+  if (!studentId || studentId.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Student ID is required' });
+  }
+  if (!certificateTitle || certificateTitle.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Certificate Title is required' });
+  }
+  if (!courseName || courseName.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Course Name is required' });
+  }
+  if (!issuerName || issuerName.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Issuer Name is required' });
+  }
+  if (!issuerOrganization || issuerOrganization.trim() === '') {
+    return res.status(400).json({ success: false, message: 'Issuer Organization is required' });
+  }
+  if (!issueDate) {
+    return res.status(400).json({ success: false, message: 'Issue Date is required' });
+  }
+  if (isNaN(Date.parse(issueDate))) {
+    return res.status(400).json({ success: false, message: 'Invalid Issue Date format' });
+  }
+
+  next();
+};

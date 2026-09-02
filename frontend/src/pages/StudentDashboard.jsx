@@ -8,19 +8,40 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [certificates, setCertificates] = useState([]);
+  const [loadingCerts, setLoadingCerts] = useState(true);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await api.get('/students/me');
         if (response.data.success) {
-          setProfile(response.data.data);
+          const studentProfile = response.data.data;
+          setProfile(studentProfile);
+          // Fetch certificates after getting student details
+          fetchCertificates(studentProfile.studentId);
         }
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load profile');
+        setLoadingCerts(false);
       } finally {
         setLoading(false);
       }
     };
+
+    const fetchCertificates = async (studentId) => {
+      try {
+        const res = await api.get(`/certificates/student/${studentId}`);
+        if (res.data.success) {
+          setCertificates(res.data.data.certificates);
+        }
+      } catch (err) {
+        console.error('Failed to load certificates', err);
+      } finally {
+        setLoadingCerts(false);
+      }
+    };
+
     fetchProfile();
   }, []);
 
@@ -44,7 +65,7 @@ const StudentDashboard = () => {
           </div>
         </div>
       </nav>
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-2xl font-bold text-gray-900">My Profile</h2>
           
@@ -83,6 +104,31 @@ const StudentDashboard = () => {
             </div>
           ) : (
             <p className="text-gray-500">Profile data not available.</p>
+          )}
+        </div>
+
+        <div className="rounded-lg bg-white p-6 shadow">
+          <h2 className="mb-4 text-2xl font-bold text-gray-900">My Certificates</h2>
+          {loadingCerts ? (
+            <p className="text-gray-500">Loading certificates...</p>
+          ) : certificates.length === 0 ? (
+            <p className="text-gray-500">No certificates issued yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {certificates.map(cert => (
+                <a href={`/certificate/${cert._id}`} key={cert._id} className="block rounded-lg border p-4 shadow-sm hover:border-indigo-500 hover:shadow-md transition-shadow cursor-pointer">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-semibold text-gray-500">{cert.certificateId}</span>
+                    <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${cert.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {cert.status}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 truncate">{cert.certificateTitle}</h3>
+                  <p className="text-sm text-gray-600 truncate">{cert.courseName}</p>
+                  <p className="mt-4 text-xs text-gray-400">Issued: {new Date(cert.issueDate).toLocaleDateString()}</p>
+                </a>
+              ))}
+            </div>
           )}
         </div>
       </main>
