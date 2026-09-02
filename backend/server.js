@@ -23,11 +23,13 @@ import authRoutes from './routes/authRoutes.js';
 import testRoutes from './routes/testRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import certificateRoutes from './routes/certificateRoutes.js';
+import batchRoutes from './routes/batchRoutes.js';
 
 // Apply error handling middleware
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/batches', batchRoutes);
 app.use('/api', testRoutes);
 
 app.use(notFound);

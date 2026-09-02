@@ -63,6 +63,21 @@ const CertificateDetails = () => {
               </div>
               {(user?.role === 'ADMIN' || user?.role === 'STAFF') && (
                 <div className="flex space-x-2">
+                  {!certificate.pdfPath && certificate.status === 'ACTIVE' && (
+                    <button
+                      onClick={async () => {
+                        try {
+                          await api.post(`/certificates/${certificate._id}/generate`);
+                          fetchCertificate();
+                        } catch (e) {
+                          alert(e.response?.data?.message || 'Failed to generate PDF');
+                        }
+                      }}
+                      className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
+                    >
+                      Generate PDF
+                    </button>
+                  )}
                   {certificate.status === 'ACTIVE' && (
                     <button
                       onClick={handleRevoke}
@@ -71,6 +86,28 @@ const CertificateDetails = () => {
                       Revoke
                     </button>
                   )}
+                  {certificate.pdfPath && (
+                    <a
+                      href={`http://localhost:5000/api/certificates/${certificate._id}/download`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
+                    >
+                      Download PDF
+                    </a>
+                  )}
+                </div>
+              )}
+              {user?.role === 'STUDENT' && certificate.pdfPath && (
+                <div className="flex space-x-2">
+                  <a
+                    href={`http://localhost:5000/api/certificates/${certificate._id}/download`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    Download PDF
+                  </a>
                 </div>
               )}
             </div>

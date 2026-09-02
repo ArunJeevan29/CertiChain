@@ -162,3 +162,62 @@ export const revokeCertificate = async (req, res, next) => {
     next(error);
   }
 };
+
+import path from 'path';
+import fs from 'fs';
+
+// @desc    Generate PDF for certificate
+// @route   POST /api/certificates/:id/generate
+// @access  Private/Admin,Staff
+export const generatePdf = async (req, res, next) => {
+  try {
+    const data = await certificateService.generatePdfForCertificate(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: 'PDF generated successfully',
+      data,
+    });
+  } catch (error) {
+    if (error.statusCode) res.status(error.statusCode);
+    next(error);
+  }
+};
+
+// @desc    Download PDF for certificate
+// @route   GET /api/certificates/:id/download
+// @access  Private/Admin,Staff,Student
+export const downloadPdf = async (req, res, next) => {
+  try {
+    const cert = await certificateService.getCertificateById(req.params.id);
+
+    // IDOR Protection: If STUDENT, ensure they own it
+    if (req.user.role === 'STUDENT' && cert.student._id.toString() !== req.user.userId) {
+      return res.status(403).json({ success: false, message: 'Access denied. You can only download your own certificates.' });
+    }
+
+    if (!cert.pdfPath) {
+      return res.status(404).json({ success: false, message: 'PDF has not been generated for this certificate yet.' });
+    }
+
+    const ROOT_DIR = path.resolve();
+    const pdfDir = path.join(ROOT_DIR, 'generated-certificates');
+    const requestedFile = path.resolve(ROOT_DIR, cert.pdfPath);
+
+    // Path traversal protection
+    const relative = path.relative(pdfDir, requestedFile);
+    const isSafe = relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+    
+    if (!isSafe) {
+      return res.status(403).json({ success: false, message: 'Invalid file path.' });
+    }
+
+    if (!fs.existsSync(requestedFile)) {
+      return res.status(404).json({ success: false, message: 'PDF file not found on server.' });
+    }
+
+    res.download(requestedFile, `${cert.certificateId}.pdf`);
+  } catch (error) {
+    if (error.statusCode) res.status(error.statusCode);
+    next(error);
+  }
+};

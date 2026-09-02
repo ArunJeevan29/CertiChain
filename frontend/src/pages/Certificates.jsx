@@ -115,32 +115,40 @@ const Certificates = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Certificate ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Student ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Course</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Issue Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Certificate ID</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Student</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Course Name</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Issue Date</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">PDF</th>
+                    <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {certificates.map((cert) => (
                     <tr key={cert._id}>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-indigo-600">
-                        {cert.certificateId}
+                      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{cert.certificateId}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                        {cert.student?.name}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{cert.student?.studentId || 'Unknown'}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{cert.courseName}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{cert.courseName}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                         {new Date(cert.issueDate).toLocaleDateString()}
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                      <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${cert.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                           {cert.status}
                         </span>
                       </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm">
+                        <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${cert.pdfPath ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-800'}`}>
+                          {cert.pdfPath ? 'Available' : 'Not Generated'}
+                        </span>
+                      </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                        <Link to={`/certificate/${cert._id}`} className="text-indigo-600 hover:text-indigo-900">View / Edit</Link>
+                        <Link to={`/certificate/${cert._id}`} className="text-indigo-600 hover:text-indigo-900">
+                          View
+                        </Link>
                       </td>
                     </tr>
                   ))}

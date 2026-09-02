@@ -15,6 +15,7 @@ import EditStudent from './pages/EditStudent';
 import Certificates from './pages/Certificates';
 import CreateCertificate from './pages/CreateCertificate';
 import CertificateDetails from './pages/CertificateDetails';
+import BulkCertificateGeneration from './pages/BulkCertificateGeneration';
 
 function App() {
   return (
@@ -96,6 +97,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                 <CreateCertificate />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/certificates/bulk" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                <BulkCertificateGeneration />
               </ProtectedRoute>
             } 
           />

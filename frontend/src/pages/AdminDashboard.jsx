@@ -20,6 +20,9 @@ const AdminDashboard = () => {
               <Link to="/certificates" className="text-sm font-medium text-indigo-600 hover:text-indigo-900">
                 Manage Certificates
               </Link>
+              <Link to="/certificates/bulk" className="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                Bulk Generation
+              </Link>
               <span className="text-sm text-gray-700">Welcome, {user?.name} ({user?.role})</span>
               <button
                 onClick={logout}

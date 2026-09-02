@@ -5,7 +5,9 @@ import {
   getCertificateById,
   getCertificatesByStudent,
   updateCertificate,
-  revokeCertificate
+  revokeCertificate,
+  generatePdf,
+  downloadPdf
 } from '../controllers/certificateController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { authorizeRoles } from '../middleware/roleMiddleware.js';
@@ -39,5 +41,13 @@ router.put('/:id', validateMongoId, authorizeRoles('ADMIN', 'STAFF'), updateCert
 // @route   PATCH /api/certificates/:id/revoke
 // @access  Private/Admin,Staff
 router.patch('/:id/revoke', validateMongoId, authorizeRoles('ADMIN', 'STAFF'), revokeCertificate);
+
+// @route   POST /api/certificates/:id/generate
+// @access  Private/Admin,Staff
+router.post('/:id/generate', validateMongoId, authorizeRoles('ADMIN', 'STAFF'), generatePdf);
+
+// @route   GET /api/certificates/:id/download
+// @access  Private/Admin,Staff,Student
+router.get('/:id/download', validateMongoId, authorizeRoles('ADMIN', 'STAFF', 'STUDENT'), downloadPdf);
 
 export default router;

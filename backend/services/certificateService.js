@@ -1,6 +1,7 @@
 import Certificate from '../models/Certificate.js';
 import User from '../models/User.js';
 import { generateCertificateId } from '../utils/certificateIdGenerator.js';
+import { generateCertificatePDF } from './pdfService.js';
 
 export const createCertificate = async (data) => {
   const { studentId, certificateTitle, courseName, issuerName, issuerOrganization, issueDate } = data;
@@ -130,4 +131,25 @@ export const revokeCertificate = async (id) => {
   cert.status = 'REVOKED';
   await cert.save();
   return cert.populate('student', '-password');
+};
+
+export const generatePdfForCertificate = async (id) => {
+  const cert = await Certificate.findById(id).populate('student', '-password');
+  if (!cert) {
+    const error = new Error('Certificate not found');
+    error.statusCode = 404;
+    throw error;
+  }
+  if (cert.status !== 'ACTIVE') {
+    const error = new Error('Cannot generate PDF for a revoked certificate');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const relativePath = await generateCertificatePDF(cert, cert.student);
+  
+  cert.pdfPath = relativePath;
+  await cert.save();
+  
+  return cert;
 };
